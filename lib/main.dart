@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:select_multiple_photos/screens/image_view_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,10 +32,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: const Center());
+    return const ImageViewScreen();
   }
 }
