@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -13,40 +15,44 @@ class ImageViewScreen extends StatefulWidget {
 class _ImageViewScreenState extends State<ImageViewScreen> {
   final ImagePicker imagePicker = ImagePicker();
 
+  List<XFile>? imageFileList = [];
+
+  void selectImages() async {
+    final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
+    if (selectedImages!.isNotEmpty) {
+      imageFileList!.addAll(selectedImages);
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('widget.title'),
+          title: Text('widget.title'),
         ),
         body: Center(
           child: Column(children: [
             Row(
-              children: const [
-                Spacer(),
-                SizedBox(height: 100, child: ImageBox()),
-                Spacer(),
+              children: [
+                const Spacer(),
+                SizedBox(height: 100, child: _buildImageView()),
+                const Spacer()
               ],
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                selectImages();
+              },
               child: const Text('set'),
             )
           ]),
         ));
   }
-}
 
-class ImageBox extends StatelessWidget {
-  const ImageBox({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  ListView _buildImageView() {
     return ListView.builder(
       shrinkWrap: true,
-      //physics: const NeverScrollableScrollPhysics(),
       itemBuilder: ((context, index) {
         return Padding(
           padding: const EdgeInsets.all(9),
@@ -74,20 +80,23 @@ class ImageBox extends StatelessWidget {
                 ),
                 height: 60,
                 width: 60,
-                child: Icon(
-                  Icons.camera_alt,
-                  color: Colors.grey[800],
-                )
+                child:
+                    //     Image.file(File(imageFileList![index].path),
+                    //              fit: BoxFit.cover) ??
+                    //     Icon(
+                    //   Icons.camera_alt,
+                    //   color: Colors.grey[800],
+                    // ),
 
-                // images == null
-                //     ? Icon(
-                //         Icons.camera_alt,
-                //         color: Colors.grey[800],
-                //       )
-                //     : Icon(
-                //         Icons.camera_alt,
-                //         color: Colors.grey[800],
-                //       ) //Image.file(images[index].path),
+                    imageFileList!.length <= 5
+                        ? Icon(
+                            Icons.camera_alt,
+                            color: Colors.grey[800],
+                          )
+                        : Image.file(File(imageFileList![index].path),
+                            fit: BoxFit.cover)
+
+                //Image.file(images[index].path),
                 ),
           ),
         );
